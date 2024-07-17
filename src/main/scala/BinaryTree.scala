@@ -34,7 +34,6 @@ object BinaryTree {
         }
         else dfs
       }
-      
 
       (root +: helper(root, null)).filterNot { node => (node == null) || to_delete.contains(node.value) }
     }
