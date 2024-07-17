@@ -21,6 +21,23 @@ object BinaryTree {
       else startPath.map(_ => "U").mkString("") + destPath
     }
 
+    def delNodes(root: TreeNode, to_delete: Array[Int]): List[TreeNode] = {
+      def helper(root: TreeNode, parent: TreeNode): List[TreeNode] = {
+        lazy val dfs = helper(root.left, root) ++ helper(root.right, root)
+        if(root == null) List()
+        else if (to_delete.contains(root.value)) {
+          if (parent != null) {
+            if (parent.left != null && parent.left.value == root.value) parent.left = null
+            if (parent.right != null && parent.right.value == root.value) parent.right = null
+          }
+          List(root.left, root.right) ++ dfs
+        }
+        else dfs
+      }
+
+      (root +: helper(root, null)).filterNot { node => (node == null) || to_delete.contains(node.value) }
+    }
+
     def firstMatching(str1: String, str2: String): String = {
       if (str1.length < str2.length) firstMatching(str2, str1)
       if (str2.isEmpty) return ""
