@@ -64,4 +64,17 @@ object BinaryTree {
 
       helper(List((root, "")))
     }
+
+    def findDirectionAllNode(root: TreeNode):  List[(Int, String)] = {
+
+      def helper(root: TreeNode, path: String): List[(Int, String)] = {
+        if (root.left == root.right) List((root.value, path))
+        else if (root.left == null) helper(root.right, path + "R")
+        else if (root.right == null) helper(root.left, path + "L")
+        else helper(root.left, path + "L") ++ helper(root.right, path + "R")
+      }
+
+      helper(root, "")
+    }
+    
 }
