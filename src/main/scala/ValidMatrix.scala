@@ -21,5 +21,6 @@ object ValidMatrix {
       help(rowSum, colSum, output)
     }
     help(rowSum, colSum, Array.ofDim[Int](rowSum.length,colSum.length))
+
   }
 }
