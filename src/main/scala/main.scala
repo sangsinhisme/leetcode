@@ -4,9 +4,8 @@ import Arrays.*
 @main
 def main(): Unit = {
 
-  val names = Array("Alice","Bob","Bob")
-  val heights = Array(155,185,150)
-  println(sortPeople(names, heights).mkString("Array(", ", ", ")"))
+  val nums = Array(-1,1,-6,4,5,-6,1,4,1)
+  println(frequencySort(nums).mkString(", "))
 }
 
 
