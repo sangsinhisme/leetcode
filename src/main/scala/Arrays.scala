@@ -40,4 +40,56 @@ object Arrays {
 
     helper(sortSeq)
   }
+
+  @tailrec
+  def isSorted[T](list: List[T])(implicit ord: Ordering[T]): Boolean = list match {
+    case Nil => true // an empty list is sorted
+    case x :: Nil => true // a single-element list is sorted
+    case x :: xs => ord.lteq(x, xs.head) && isSorted(xs) // if the first two elements are ordered and the rest are sorted, the full list is sorted too
+  }
+
+  @tailrec
+  def isSortedDesc[T](list: List[T])(implicit ord: Ordering[T]): Boolean = list match {
+    case Nil => true // an empty list is sorted
+    case x :: Nil => true // a single-element list is sorted
+    case x :: xs => ord.gteq(x, xs.head) && isSortedDesc(xs) // if the first two elements are ordered and the rest are sorted, the full list is sorted too
+  }
+
+
+  def numTeams(rating: Array[Int]): Int = {
+    var count = 0
+    val n = rating.length
+
+    for (i <- 0 until n) {
+      for (j <- i + 1 until n) {
+        for (k <- j + 1 until n) {
+          if ((rating(i) < rating(j) && rating(j) < rating(k)) ||
+            (rating(i) > rating(j) && rating(j) > rating(k))) {
+            count += 1
+          }
+        }
+      }
+    }
+
+    count
+  }
+
+  def combinations(arr: Array[Int], k: Int): LazyList[Array[Int]] = {
+    if (k == 0) return LazyList(Array())
+    if (arr.length < k) return LazyList()
+
+    val head = arr.head
+    val tailCombinations = combinations(arr.tail, k - 1).map(head +: _)
+    val withoutHeadCombinations = combinations(arr.tail, k)
+
+    tailCombinations ++ withoutHeadCombinations
+  }
+
+  def countSeniors(details: Array[String]): Int = {
+    var senior = 0
+    for (passenger <- details){
+      senior += (if passenger(11).asDigit * 10 + passenger(12).asDigit > 60 then 1 else 0)
+    }
+    senior
+  }
 }
