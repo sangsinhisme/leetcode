@@ -4,8 +4,9 @@ import Arrays.*
 @main
 def main(): Unit = {
 
-  val nums = Array(1,1,0,0,1)
-  println(minSwaps(nums))
+  val target = Array(3, 7, 9)
+  val arr = Array(3, 7, 11)
+  println(canBeEqual(target, arr))
 }
 
 
