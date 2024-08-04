@@ -114,4 +114,23 @@ object Arrays {
   def canBeEqual(target: Array[Int], arr: Array[Int]): Boolean = {
     target.sorted.sameElements(arr.sorted)
   }
+
+  def rangeSum(nums: Array[Int], n: Int, left: Int, right: Int): Int = {
+    val MOD = 1000000007
+    val allSums = new collection.mutable.ArrayBuffer[Int]()
+    for (i <- nums.indices) {
+      var sum = 0
+      for (j <- i until nums.length) {
+        sum += nums(j)
+        allSums.append(sum)
+      }
+    }
+    val sortedSums = allSums.sorted
+    var result = 0L
+    for (i <- left - 1 until right) {
+      result = (result + sortedSums(i)) % MOD
+    }
+
+    result.toInt
+  }
 }
