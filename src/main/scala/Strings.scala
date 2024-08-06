@@ -1,4 +1,5 @@
 import scala.annotation.tailrec
+import scala.collection.mutable
 import scala.util.matching.Regex
 
 object Strings {
@@ -21,5 +22,16 @@ object Strings {
     (word1.toList zip word2.toList).foldLeft("")(
       (x, y) => x + s"${y._1}" + s"${y._2}"
     ) + subLength
+  }
+
+  def minimumPushes(word: String): Int = {
+    val countString = mutable.LinkedHashMap.empty[Char, Int]
+    for (i <- word) {
+      countString.get(i) match
+        case Some(value) => countString.put(i, value + 1)
+        case _ => countString.put(i, 1)
+    }
+    countString.values.toSeq.sortWith((x, y) => x > y).zipWithIndex.foldLeft(0)(
+      (sum, values) => sum + values._1 * ((values._2 + 8) / 8))
   }
 }

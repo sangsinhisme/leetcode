@@ -133,4 +133,17 @@ object Arrays {
 
     result.toInt
   }
+
+  def kthDistinct(arr: Array[String], k: Int): String = {
+    val countString = mutable.LinkedHashMap.empty[String, Int]
+    for (i <- arr) {
+      countString.get(i) match
+        case Some(value) => countString.put(i, value + 1)
+        case _ => countString.put(i, 1)
+    }
+    val filterCount = countString.filter((_, count) => count == 1)
+    if (k > filterCount.size) ""
+    else filterCount.toIndexedSeq(k - 1)._1
+  }
+
 }
