@@ -3,7 +3,7 @@ import Strings.*
 @main
 def main(): Unit = {
 
-  val nums = 1000000001
+  val nums = 30
   println(numberToWords(nums))
 }
 
