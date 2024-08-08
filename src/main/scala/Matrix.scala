@@ -55,4 +55,43 @@ object Matrix {
     }
     output
   }
+
+  def spiralMatrixIII(rows: Int, cols: Int, rStart: Int, cStart: Int): Array[Array[Int]] = {
+    val totals = rows * cols
+
+    @tailrec
+    def helper(current: (Int, Int), visited: Array[(Int, Int)], vector: (Int, Int)): Array[(Int, Int)] = {
+      if (totals == 1) return visited :+ current
+      val nextMove = (current._1 + vector._2, current._2 + vector._1)
+      val nextVector = vector._1 match
+        case 0 => (-1 * vector._2, -1 * vector._1)
+        case _ => (vector._2, vector._1)
+      if (visited.length == totals) visited
+      else if (nextMove._1 == rows || nextMove._2 == cols || nextMove._1 < 0 || nextMove._2 < 0) {
+        helper(current, visited, nextVector)
+      }
+      else if (visited.exists(_.equals(current))) {
+        helper(nextMove, visited, vector)
+      }
+      else {
+        if (vector._1 == 0) {
+
+        } else {
+
+        }
+        val countROWS = visited.map(_._1).count(_==current._1)
+        val countCOLS = visited.map(_._2).count(_==current._2)
+        if (countCOLS == 0 || countROWS == 0) {
+          helper(nextMove, visited :+ current, nextVector)
+        } else {
+          helper(nextMove, visited :+ current, vector)
+        }
+      }
+    }
+
+    helper((rStart, cStart), Array.empty, (1, 0)).map(
+      elem => Array(elem._1, elem._2)
+    )
+  }
+
 }

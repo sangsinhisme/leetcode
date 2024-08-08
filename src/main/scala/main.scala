@@ -1,10 +1,14 @@
-import Arrays.*
-import Strings.*
+import Matrix.*
 @main
 def main(): Unit = {
 
-  val nums = 30
-  println(numberToWords(nums))
+  val rows = 5
+  val cols = 6
+  val rStart = 1
+  val cStart = 4
+  spiralMatrixIII(rows, cols, rStart, cStart).foreach(
+    elem => println(s"[${elem.mkString(", ")}]")
+  )
 }
 
 
