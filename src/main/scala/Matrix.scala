@@ -60,38 +60,39 @@ object Matrix {
     val totals = rows * cols
 
     @tailrec
-    def helper(current: (Int, Int), visited: Array[(Int, Int)], vector: (Int, Int)): Array[(Int, Int)] = {
-      if (totals == 1) return visited :+ current
-      val nextMove = (current._1 + vector._2, current._2 + vector._1)
+    def helper(current: (Int, Int), visited: Array[(Int, Int)], valid: Array[(Int, Int)], vector: (Int, Int), maxRow: Int, maxCol: Int): Array[(Int, Int)] = {
+      if (totals == 1) return visited
+      if (valid.length == totals) return valid
       val nextVector = vector._1 match
         case 0 => (-1 * vector._2, -1 * vector._1)
         case _ => (vector._2, vector._1)
-      if (visited.length == totals) visited
-      else if (nextMove._1 == rows || nextMove._2 == cols || nextMove._1 < 0 || nextMove._2 < 0) {
-        helper(current, visited, nextVector)
-      }
-      else if (visited.exists(_.equals(current))) {
-        helper(nextMove, visited, vector)
-      }
-      else {
-        if (vector._1 == 0) {
-
-        } else {
-
+      var update = current
+      var updateVisited = visited
+      var updateValid = valid
+      if (vector._2 == 0) {
+        for (i <- 0 until maxRow) {
+          update = (update._1 + vector._2, update._2 + vector._1)
+          updateVisited = updateVisited :+ update
+          if (update._1 < rows && update._2 < cols && update._1 > -1 && update._2 > -1)
+            updateValid = updateValid :+ update
         }
-        val countROWS = visited.map(_._1).count(_==current._1)
-        val countCOLS = visited.map(_._2).count(_==current._2)
-        if (countCOLS == 0 || countROWS == 0) {
-          helper(nextMove, visited :+ current, nextVector)
-        } else {
-          helper(nextMove, visited :+ current, vector)
+        helper(update, updateVisited, updateValid, nextVector, maxRow + 1, maxCol)
+      } else {
+        for (i <- 0 until maxCol) {
+          update = (update._1 + vector._2, update._2 + vector._1)
+          updateVisited = updateVisited :+ update
+          if (update._1 < rows && update._2 < cols && update._1 > -1 && update._2 > -1)
+            updateValid = updateValid :+ update
         }
+        helper(update, updateVisited, updateValid, nextVector, maxRow, maxCol + 1)
       }
     }
 
-    helper((rStart, cStart), Array.empty, (1, 0)).map(
+    helper((rStart, cStart), Array((rStart, cStart)), Array((rStart, cStart)), (1, 0), 1, 1).map(
       elem => Array(elem._1, elem._2)
     )
   }
+
+
 
 }
