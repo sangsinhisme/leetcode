@@ -1,6 +1,5 @@
 import scala.annotation.tailrec
 import scala.collection.mutable
-import scala.collection.mutable.ArrayBuffer
 
 object Arrays {
   def sortPeople(names: Array[String], heights: Array[Int]): Array[String] = {
@@ -147,6 +146,39 @@ object Arrays {
     else filterCount.toIndexedSeq(k - 1)._1
   }
 
+  def numMagicSquaresInside(grid: Array[Array[Int]]): Int = {
+    val rows = grid.length
+    val cols = grid(0).length
+    if (rows < 3 || cols < 3) return 0
+
+    def helper(i: Int, j: Int): Boolean = {
+      val nums: Set[Int] = (
+        for {
+          x <- i until i + 3
+          y <- j until j + 3
+        } yield grid(x)(y)).toSet
+      if (nums.size != 9 || nums.exists(elem => elem < 1 || elem > 9)) return false
+
+      val rows = (for (x <- i until i + 3) yield grid(x).slice(j, j + 3)).toList
+      val cols = (for (y <- j until j + 3) yield (i until i + 3).map(x => grid(x)(y))).toList
+      val diag1 = (0 until 3).map(d => grid(i + d)(j + d))
+      val diag2 = (0 until 3).map(d => grid(i + d)(j + 2 - d))
+
+      rows.forall(_.sum == 15) &&
+        cols.forall(_.sum == 15) &&
+        diag1.sum == 15 &&
+        diag2.sum == 15
+    }
+
+    var count = 0
+    for {
+      i <- 0 until rows - 2
+      j <- 0 until cols - 2
+    } {
+      if (helper(i, j)) count += 1
+    }
+    count
+  }
   def regionsBySlashes(grid: Array[String]): Int = {
     val n = grid.length
     val m = grid(0).length
@@ -198,5 +230,5 @@ object Arrays {
   }
 
 
-  
+
 }
