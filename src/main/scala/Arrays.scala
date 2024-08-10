@@ -1,5 +1,6 @@
 import scala.annotation.tailrec
 import scala.collection.mutable
+import scala.collection.mutable.ArrayBuffer
 
 object Arrays {
   def sortPeople(names: Array[String], heights: Array[Int]): Array[String] = {
@@ -145,6 +146,57 @@ object Arrays {
     if (k > filterCount.size) ""
     else filterCount.toIndexedSeq(k - 1)._1
   }
+
+  def regionsBySlashes(grid: Array[String]): Int = {
+    val n = grid.length
+    val m = grid(0).length
+    val graph: mutable.ArrayBuffer[mutable.ArrayBuffer[Int]] = mutable.ArrayBuffer.fill(n * 3, m * 3)(0)
+    val visited = mutable.ArrayBuffer.fill(n * 3, m * 3)(false)
+
+    for (i <- 0 until n) {
+      for (j <- 0 until m) {
+        if (grid(i)(j) == '/') {
+          graph(i * 3)(j * 3 + 2) = 1
+          graph(i * 3 + 1)(j * 3 + 1) = 1
+          graph(i * 3 + 2)(j * 3) = 1
+        }
+        else if (grid(i)(j) == '\\') {
+          graph(i * 3)(j * 3) = 1
+          graph(i * 3 + 1)(j * 3 + 1) = 1
+          graph(i * 3 + 2)(j * 3 + 2) = 1
+        }
+      }
+    }
+
+    def dfs(x: Int, y: Int): Unit = {
+      val directions = Set((1, 0), (-1, 0), (0, 1), (0, -1))
+      val stack = mutable.Stack((x, y))
+      while (stack.nonEmpty) {
+        val (cx, cy) = stack.pop()
+        for ((dx, dy) <- directions) {
+          val nx = cx + dx
+          val ny = cy + dy
+          if (nx >= 0 && nx < n * 3 && ny >= 0 && ny < m * 3 && graph(nx)(ny) == 0 && !visited(nx)(ny)) {
+            visited(nx)(ny) = true
+            stack.push((nx, ny))
+          }
+        }
+      }
+    }
+
+    var regionCount = 0
+
+    for (i <- 0 until n * 3; j <- 0 until m * 3) {
+      if (graph(i)(j) == 0 && !visited(i)(j)) {
+        visited(i)(j) = true
+        dfs(i, j)
+        regionCount += 1
+      }
+    }
+
+    regionCount
+  }
+
 
   
 }
