@@ -230,5 +230,115 @@ object Arrays {
   }
 
 
+  def minDays(grid: Array[Array[Int]]): Int = {
+    val n = grid.length
+    val m = grid(0).length
+    val visited = mutable.ArrayBuffer.fill(n, m)(0)
+
+    def dfs(x: Int, y: Int): Unit = {
+      val directions = Set((1, 0), (-1, 0), (0, 1), (0, -1))
+      val stack = mutable.Stack((x, y))
+      while (stack.nonEmpty) {
+        val (cx, cy) = stack.pop()
+        var linked = 0
+        for ((dx, dy) <- directions) {
+          val nx = cx + dx
+          val ny = cy + dy
+          if (nx >= 0 && nx < n && ny >= 0 && ny < m && grid(nx)(ny) == 1) {
+            if (visited(nx)(ny) > 0)
+              linked += 1
+            else
+              visited(nx)(ny) = 1
+              linked += 1
+              stack.push((nx, ny))
+          }
+        }
+        visited(cx)(cy) = linked
+      }
+    }
+
+    var regionCount = 0
+
+    for (i <- 0 until n ; j <- 0 until m) {
+      if (grid(i)(j) == 1 && visited(i)(j) == 0) {
+        visited(i)(j) = 1
+        dfs(i, j)
+        regionCount += 1
+      }
+    }
+    if (visited.isEmpty) 0
+    else if (visited.flatten.count(_ > 0) == 2) 2
+    else {
+      if (regionCount > 1) 0
+      else {
+        if (visited.flatten.min == 1) 1 else 2
+      }
+    }
+  }
+
+  def minDays2(grid: Array[Array[Int]]): Int = {
+    val n = grid.length
+    val m = grid(0).length
+
+    if (n == 0 || m == 0) return 0
+
+    def bfs(startX: Int, startY: Int, visited: Array[Array[Boolean]]): List[(Int, Int)] = {
+      val directions = List((1, 0), (-1, 0), (0, 1), (0, -1))
+      val queue = mutable.Queue((startX, startY))
+      val component = mutable.ListBuffer[(Int, Int)]()
+      visited(startX)(startY) = true
+      component += ((startX, startY))
+
+      while (queue.nonEmpty) {
+        val (x, y) = queue.dequeue()
+        for ((dx, dy) <- directions) {
+          val nx = x + dx
+          val ny = y + dy
+          if (nx >= 0 && nx < n && ny >= 0 && ny < m && grid(nx)(ny) == 1 && !visited(nx)(ny)) {
+            visited(nx)(ny) = true
+            queue.enqueue((nx, ny))
+            component += ((nx, ny))
+          }
+        }
+      }
+      component.toList
+    }
+
+    def countComponents(): Int = {
+      val visited = Array.fill(n, m)(false)
+      var componentCount = 0
+      for (i <- 0 until n; j <- 0 until m) {
+        if (grid(i)(j) == 1 && !visited(i)(j)) {
+          bfs(i, j, visited)
+          componentCount += 1
+        }
+      }
+      componentCount
+    }
+
+    def canDisconnectAllRegions: Boolean = {
+      var flag = false
+      var total = 0
+      for (i <- 0 until n; j <- 0 until m) {
+        if (grid(i)(j) == 1) {
+          total += 1
+          grid(i)(j) = 0
+          if (countComponents() > 1) {
+            grid(i)(j) = 1
+            flag = true
+          }
+          grid(i)(j) = 1
+        }
+      }
+      flag || (total == 1)
+    }
+
+    val originalCount = countComponents()
+    if (originalCount == 0) return 0
+    if (originalCount > 1) return 0
+    if (canDisconnectAllRegions) return 1
+    2
+  }
+
 
 }
