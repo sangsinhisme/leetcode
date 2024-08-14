@@ -1,12 +1,12 @@
 import Matrix.*
 import Arrays.*
-import Combines.combinationSum2
+import Combines.{combinationSum2, smallestDistancePair}
 @main
 def main(): Unit = {
 
-  val target = 5
-  val nums = Array(2,5,2,1,2)
-  println(combinationSum2(nums, target))
+  val target = 1
+  val nums = Array(1,3,1)
+  println(smallestDistancePair(nums, target))
 
 
 }
