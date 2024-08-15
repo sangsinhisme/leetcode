@@ -340,5 +340,33 @@ object Arrays {
     2
   }
 
+  def lemonadeChange(bills: Array[Int]): Boolean = {
+    var coin5 = 0
+    var coin10 = 0
+    var canGiveChange = true
+
+    for (coin <- bills if canGiveChange) {
+      coin match {
+        case 5 => coin5 += 1
+        case 10 =>
+          if (coin5 == 0) canGiveChange = false
+          else {
+            coin5 -= 1
+            coin10 += 1
+          }
+        case 20 =>
+          if (coin10 > 0 && coin5 > 0) {
+            coin10 -= 1
+            coin5 -= 1
+          } else if (coin5 >= 3) {
+            coin5 -= 3
+          } else {
+            canGiveChange = false
+          }
+      }
+    }
+    canGiveChange
+  }
+
 
 }

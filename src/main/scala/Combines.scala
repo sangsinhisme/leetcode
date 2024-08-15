@@ -18,18 +18,35 @@ object Combines {
   }
 
   def smallestDistancePair(nums: Array[Int], k: Int): Int = {
-    val pq = mutable.PriorityQueue.empty[Int](Ordering.by(+_))
+    // Sort the input array
+    val sortedNums = nums.sorted
 
-    for (i <- nums.indices; j <- i + 1 until nums.length) {
-      val distance = Math.abs(nums(i) - nums(j))
-      if (pq.size < k) {
-        pq.enqueue(distance)
-      } else if (distance < pq.head) {
-        pq.dequeue()
-        pq.enqueue(distance)
+    // Define a helper function to count pairs with distance <= mid
+    def countPairs(mid: Int): Int = {
+      var count = 0
+      var j = 0
+      for (i <- sortedNums.indices) {
+        while (j < sortedNums.length && sortedNums(j) - sortedNums(i) <= mid) {
+          j += 1
+        }
+        count += (j - i - 1)
+      }
+      count
+    }
+
+    // Binary search on the distance
+    var low = 0
+    var high = sortedNums.last - sortedNums.head
+    while (low < high) {
+      val mid = (low + high) / 2
+      if (countPairs(mid) >= k) {
+        high = mid
+      } else {
+        low = mid + 1
       }
     }
-    pq.head
+
+    low
   }
 
 }
