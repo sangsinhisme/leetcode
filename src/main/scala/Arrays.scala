@@ -368,5 +368,25 @@ object Arrays {
     canGiveChange
   }
 
+  def maxDistance(arrays: List[List[Int]]): Int = {
+    // Initialize with the first array's min and max
+    var minVal = arrays.head.head
+    var maxVal = arrays.head.last
+    var maxDist = 0
 
+    // Iterate over the rest of the arrays
+    for (i <- 1 until arrays.length) {
+      val currentMin = arrays(i).head
+      val currentMax = arrays(i).last
+
+      // Calculate the maximum distance using current array's values and global min/max
+      maxDist = Math.max(maxDist, Math.max(Math.abs(currentMax - minVal), Math.abs(maxVal - currentMin)))
+
+      // Update global min and max
+      minVal = Math.min(minVal, currentMin)
+      maxVal = Math.max(maxVal, currentMax)
+    }
+
+    maxDist
+  }
 }
