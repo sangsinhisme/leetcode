@@ -389,4 +389,36 @@ object Arrays {
 
     maxDist
   }
+
+  // Dimanche, 18 août 2024
+  /**
+   An ugly number is a positive integer whose prime factors are limited to 2, 3, and 5.
+   Given an integer n, return the nth ugly number.
+  */
+  def nthUglyNumber(n: Int): Int = {
+    val heap = mutable.PriorityQueue[Long]()(Ordering.by(-_)) // Min-heap
+    val seen = mutable.HashSet[Long]()
+
+    // Initial ugly number
+    heap.enqueue(1)
+    seen.add(1)
+
+    var ugly = 1L
+
+    for (_ <- 1 until n) {
+      ugly = heap.dequeue()
+
+      // Generate the next ugly numbers
+      val nextUglyNumbers = List(ugly * 2, ugly * 3, ugly * 5)
+
+      for (num <- nextUglyNumbers) {
+        if (!seen.contains(num)) {
+          heap.enqueue(num)
+          seen.add(num)
+        }
+      }
+    }
+
+    heap.dequeue().toInt
+  }
 }
